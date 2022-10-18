@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2:mpiprocs=1
+#PBS -P CBBI1243
+#PBS -N applyBQSR
+#PBS -q serial
+#PBS -l walltime=8:00:00
+#PBS -o /mnt/lustre/users/jmorrice/projects/fifty-genomes/reports/qsub/applyBQSR.out
+#PBS -e /mnt/lustre/users/jmorrice/projects/fifty-genomes/reports/qsub/applyBQSR.err
+#PBS -m abe
+#PBS -M jackmo375@gmail.com
+
+cd /mnt/lustre/users/jmorrice/projects/fifty-genomes
+./templates/pre-processing/apply-base-recalibration-model.sh || { exit 1; }

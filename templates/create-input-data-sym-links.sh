@@ -18,8 +18,11 @@ main() {
     sample_ids_cases_dir_2=(SCD-225  SCD-33  SCD-337  SCD-348  SCD-356  SCD-363  SCD-369  SCD-398  SCD-421  SCD-425  SCD-436  SCD-479  SCD-526)
     sample_ids_controls=(\
         CB12  CB15  CB17  CB29  CB32  CB7   CF25  CF27  CF37  \
-        CF49  CP28  CP38  CP48  CB14  CB16  CB24  CB31  CB33  \
-        CF24  CF26  CF30  CF46  CP17  CP36  CP40) # CP9 removed because raw reads were not available
+        CF49  CP28  CP38  CB16  CB24  CB31  CB33  \
+        CF24  CF26  CF30  CF46  CP17  CP36  CP40)
+    # CP9 removed because raw reads were not available
+    # CB14 removed because one of the read files was corrupted
+    # CP48 removed: a read file was corrupted
 
     create_links ${cases_dir_1} "${sample_ids_cases_dir_1[@]}"
     create_links ${cases_dir_2} "${sample_ids_cases_dir_2[@]}"

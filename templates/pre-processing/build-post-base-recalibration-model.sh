@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source ./config.sh
+
+sample_id="SCD109"
+
+input_bam="${output_data_dir}/${sample_id}_bases-recalibrated.bam"
+
+$gatk --java-options -Xmx2g \
+    BaseRecalibrator \
+    -I ${input_bam} \
+    -O ${working_data_dir}/${sample_id}_bases-recalibrated.recal.table \
+    -R ${reference_fasta} \
+    -L ${intervals} \
+    ${variant_databases[@]/#/--known-sites } \
+    --verbosity INFO
