@@ -4,3 +4,7 @@ working-data/*
 reference-data/*
 reports/*
 software/*
+
+*.qsub
+.gitignore
+templates/create-input-data-sym-links.sh
