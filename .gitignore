@@ -8,3 +8,4 @@ software/*
 *.qsub
 .gitignore
 templates/create-input-data-sym-links.sh
+config.sh
