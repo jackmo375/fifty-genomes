@@ -4,6 +4,8 @@ working-data/*
 reference-data/*
 reports/*
 software/*
+.nextflow*
+work/*
 
 *.qsub
 .gitignore

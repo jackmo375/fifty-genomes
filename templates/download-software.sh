@@ -16,6 +16,11 @@ wget https://github.com/FelixKrueger/TrimGalore/archive/refs/tags/0.6.7.zip \
     --no-clobber
 unzip -n -d ${software_dir} "${software_dir}/0.6.7.zip"
 
+# cutadapt
+wget https://github.com/marcelm/cutadapt/archive/refs/tags/v4.0.zip \
+    --directory-prefix $software_dir \
+    --no-clobber
+unzip -n -d ${software_dir} "${software_dir}/v4.0.zip"
 
 # bwa
 wget https://github.com/lh3/bwa/releases/download/v0.7.17/bwa-0.7.17.tar.bz2 \
