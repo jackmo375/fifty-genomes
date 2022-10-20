@@ -3,16 +3,18 @@
 nextflow.enable.dsl=2
 
 include {
-    getInputSampleListAsChannel
+    getInputSampleListAsChannel;
 } from "${params.modulesDir}/base.nf"
 
 include {
-    getFastqcReports
+    getFastqcReport;
+    renameFastqcReportWithSampleId;
 } from "${params.modulesDir}/preprocessing.nf"
 
 workflow {
-
     sampleFastqs = getInputSampleListAsChannel(params.sampleInputFiles)
 
-    getFastqcReports(sampleFastqs)
+    fastqcReports = getFastqcReport(sampleFastqs)
+
+    renameFastqcReportWithSampleId(fastqcReports)
 }
