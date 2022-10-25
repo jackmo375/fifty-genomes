@@ -1,31 +1,27 @@
-process getFastqcReport {
+process getFastqcReports {
     input:
     tuple val(idSample), path(inputFastq1), path(inputFastq2)
 
     output:
-    tuple val(idSample), path("${inputFastq1.getSimpleName()}*"), path("${inputFastq2.getSimpleName()}*")
+    tuple val(idSample), path("${sampleId}_?_fastqc.*")
 
     script:
     template "${params.templatesDir}/pre-processing/get-fastqc-report.sh"
 }
 
-process renameFastqcReportWithSampleId {
+process saveFastqcReports {
     publishDir "${params.reportsDir}/fastqc", mode: 'copy'
 
     input:
-    tuple val(sampleId), path(fastqcOutput_1), path(fastqcOutput_2)
+    tuple val(sampleId), path(fastqcOutputs)
 
     output:
     path "${sampleId}_?_fastqc.*"
 
     script:
-       """
-        mkdir -p ${params.reportsDir}/fastqc
-        mv ${fastqcOutput_1[0]} ${sampleId}_1_fastqc.${fastqcOutput_1[0].getExtension()}
-        mv ${fastqcOutput_1[1]} ${sampleId}_1_fastqc.${fastqcOutput_1[1].getExtension()}
-        mv ${fastqcOutput_2[0]} ${sampleId}_2_fastqc.${fastqcOutput_2[0].getExtension()}
-        mv ${fastqcOutput_2[1]} ${sampleId}_2_fastqc.${fastqcOutput_2[1].getExtension()}
-        """
+    """
+    mkdir -p ${params.reportsDir}/fastqc
+    """
 }
 
 process trimSampleReads {
@@ -41,17 +37,17 @@ process trimSampleReads {
 }
 
 process saveTrimmedFastqsToOutputDir {
-    publishDir "${params.outputDataDir}/trimgalore", mode: 'copy'
+    publishDir "${params.outputDataDir}/trimmed-reads", mode: 'copy'
 
     input:
-    tuple val(sampleId), path(fastqs)
+        tuple val(sampleId), path(fastqs)
 
     output:
-    path("*.fq.gz"), includeInputs: true
+        path("*.fq.gz"), includeInputs: true
 
     script:
-    """
-        mkdir -p ${params.outputDataDir}/trimgalore
+        """
+        mkdir -p ${params.outputDataDir}/trimmed-reads
         """
 }
 
@@ -70,4 +66,29 @@ process saveTrimgaloreReportsToReportsDir {
         """
 }
 
+process saveTrimmingReportsToReportsDir {
+    publishDir "${params.reportsDir}/trimming", mode: 'copy'
 
+    input:
+        tuple val(sampleId), path(trimmingReports)
+
+    output:
+        path("*.{txt,html,zip,json}"), includeInputs: true
+
+    script:
+        """
+        mkdir -p ${params.reportsDir}/trimming
+        """
+}
+
+process trimReadsWithFastp {
+    input:
+    tuple val(sampleId), path(inputFastq1), path(inputFastq2)
+
+    output:
+        tuple val(sampleId), path("${sampleId}_trimmed_fastp.R{1,2}.fq.gz")
+        tuple val(sampleId), path("*.{html,json}")
+
+    script:
+    template "${params.templatesDir}/pre-processing/trim-reads-with-fastp.sh"
+}
