@@ -1,4 +1,6 @@
 process getFastqcReport {
+    tag "${idSample}"
+
     input:
     tuple val(idSample), path(inputFastq1), path(inputFastq2)
 
@@ -29,6 +31,8 @@ process renameFastqcReportWithSampleId {
 }
 
 process trimSampleReads {
+    tag "${idSample}"
+
     input:
     tuple val(idSample), path(inputFastq1), path(inputFastq2)
 
