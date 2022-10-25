@@ -1,5 +1,5 @@
 #!/bin/bash
 
 ${params.fastqc} \
-    $inputFastq1 \
-    $inputFastq2
+    ${inputFastqs[0]} \
+    ${inputFastqs[1]}
