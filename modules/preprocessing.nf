@@ -1,4 +1,6 @@
 process getFastqcReports {
+    tag "${idSample}"
+
     input:
     tuple val(idSample), path(inputFastqs)
 
@@ -45,6 +47,8 @@ process trimSampleReads {
 process saveTrimmedFastqsToOutputDir {
     publishDir "${params.outputDataDir}/trimmed-reads", mode: 'copy'
 
+    tag "${sampleId}"
+
     input:
         tuple val(sampleId), path(fastqs)
 
@@ -75,6 +79,8 @@ process saveTrimgaloreReportsToReportsDir {
 process saveTrimmingReportsToReportsDir {
     publishDir "${params.reportsDir}/trimming", mode: 'copy'
 
+    tag "${sampleId}"
+
     input:
         tuple val(sampleId), path(trimmingReports)
 
@@ -88,6 +94,8 @@ process saveTrimmingReportsToReportsDir {
 }
 
 process trimReadsWithFastp {
+    tag "${sampleId}"
+
     input:
     tuple val(sampleId), path(inputFastq1), path(inputFastq2)
 
