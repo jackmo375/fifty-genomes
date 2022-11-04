@@ -106,3 +106,33 @@ process trimReadsWithFastp {
     script:
     template "${params.templatesDir}/pre-processing/trim-reads-with-fastp.sh"
 }
+
+process alignSampleReadsToReference {
+    tag "${sampleId}"
+
+    input:
+    tuple val(sampleId), path(inputFastqs)
+    path referenceFastaBundle
+
+    output:
+    tuple val(sampleId), path("${sampleId}_aligned.bam*")
+
+    script:
+    template "${params.templatesDir}/pre-processing/align-sample-reads-to-reference.sh"
+}
+
+process markDuplicateReads {
+    tag "${sampleId}"
+    publishDir "${params.outputDataDir}/aligned", pattern: "*.{bai,bam}", mode: 'copy'
+    publishDir "${params.reportsDir}/gatk", pattern: "*.bam.metrics", mode: 'copy'
+
+    input:
+    tuple val(sampleId), path(sampleBamAndBai)
+
+    output:
+    tuple val(sampleId), path("${sampleId}_duplicates-marked.ba*")
+    tuple val(sampleId), path("${sampleId}.bam.metrics")
+
+    script:
+    template "${params.templatesDir}/pre-processing/mark-duplicate-reads.sh"
+}

@@ -18,3 +18,19 @@ def returnFile(it) {
     if (!file(it).exists()) exit 1, "Missing file: ${it} - please check your inuts and try again"
     return file(it)
 }
+
+def getSampleIdsAsChannel(sampleInputFiles) {
+    return getInputSampleListAsChannel(sampleInputFiles).map{it[0]}
+}
+
+def getTrimmedSampleFastqs(sampleInputFiles) {
+    return getSampleIdsAsChannel(sampleInputFiles).map {
+        [it,[
+            returnFile("${params.outputDataDir}/trimmed-reads/${it}_trimmed_fastp.R1.fq.gz"),
+            returnFile("${params.outputDataDir}/trimmed-reads/${it}_trimmed_fastp.R2.fq.gz")]]
+    }
+}
+
+def getReferenceFastaBundle() {
+    return channel.fromPath("${params.referenceFasta}*").toSortedList()
+}
