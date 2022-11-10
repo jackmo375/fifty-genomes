@@ -2,9 +2,9 @@
 
 ${params.gatk} --java-options -Xmx2g \
     BaseRecalibrator \
-    -I ${bamAndBai[0]} \
-    -O "${bamAndBai[0].getSimpleName()}.recal.table" \
-    -R ${referenceFasta[0]} \
+    -I ${baiAndBam[1]} \
+    -O ${baiAndBam[0].getSimpleName()}.recal.table \
+    -R ${referenceFasta[1]} \
     -L ${genomeIntervals} \
-    ${variantDatabases[@]/#/--known-sites } \
+    ${variantDatabaseGatkOptions} \
     --verbosity INFO

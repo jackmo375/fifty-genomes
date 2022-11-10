@@ -136,3 +136,53 @@ process markDuplicateReads {
     script:
     template "${params.templatesDir}/pre-processing/mark-duplicate-reads.sh"
 }
+
+process calculateRecalibrationModel {
+    tag "${sampleId}"
+    publishDir "${params.reportsDir}/bases-recalibrated", mode: 'copy'
+
+    input:
+    tuple val(sampleId), path(baiAndBam)
+    path(referenceFasta)
+    path(genomeIntervals)
+    tuple path(variantDatabasePaths), val(variantDatabaseGatkOptions)
+
+    output:
+    tuple val(sampleId), path("${baiAndBam[0].getSimpleName()}.recal.table")
+
+    script:
+    template "${params.templatesDir}/pre-processing/calculate-base-recalibration-model.sh"
+}
+
+process recalibrateBases {
+    tag "${sampleId}"
+    publishDir "${params.outputDataDir}/bases-recalibrated", mode: 'copy'
+
+    input:
+    tuple val(sampleId), path(baiAndBam), path(recalibrationModel)
+    path(referenceFasta)
+    path(genomeIntervals)
+
+    output:
+    tuple val(sampleId), path("${sampleId}_bases-recalibrated.{bai,bam}")
+
+    script:
+    template "${params.templatesDir}/pre-processing/recalibrate-sample-bases.sh"
+}
+
+process calculatePostRecalibrationModel {
+    tag "${sampleId}"
+    publishDir "${params.reportsDir}/bases-recalibrated", mode: 'copy'
+
+    input:
+    tuple val(sampleId), path(baiAndBam)
+    path(referenceFasta)
+    path(genomeIntervals)
+    tuple path(variantDatabasePaths), val(variantDatabaseGatkOptions)
+
+    output:
+    tuple val(sampleId), path("${baiAndBam[0].getSimpleName()}.recal.table")
+
+    script:
+    template "${params.templatesDir}/pre-processing/calculate-base-recalibration-model.sh"
+}

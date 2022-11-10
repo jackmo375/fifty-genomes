@@ -32,5 +32,29 @@ def getTrimmedSampleFastqs(sampleInputFiles) {
 }
 
 def getReferenceFastaBundle() {
-    return channel.fromPath("${params.referenceFasta}*").toSortedList()
+    return channel.fromPath(
+        ["${params.referenceFasta}*",
+        "${params.referenceFasta}" - ~/\.fasta/ + '.dict']).toSortedList()
 }
+
+def getMarkedDuplicateSampleBams(sampleInputFiles) {
+    return getSampleIdsAsChannel(sampleInputFiles).map {
+        [it,[
+            returnFile("${params.outputDataDir}/aligned/${it}_duplicates-marked.bai"),
+            returnFile("${params.outputDataDir}/aligned/${it}_duplicates-marked.bam")]]
+    } // note that the bam index is listed before the bam itself! 
+}
+
+def getGenomeIntervals() {
+    return channel.value(file("${params.genomeIntervals}"))
+}
+
+def getVariantDatabases() {
+    databasePaths = channel.fromPath(params.variantDatabases).toSortedList()
+    gatkOptions = channel.from(params.variantDatabases)
+        .map{ it -> "--known-sites ${it}" }
+        .collect()
+        .map{ it -> it.join(' ') }
+    return databasePaths.mix(gatkOptions).toSortedList()
+}
+

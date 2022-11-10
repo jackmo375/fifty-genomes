@@ -18,7 +18,7 @@ workflow() {
 
     referenceFastaWithIndices = getReferenceFastaBundle()
 
-    sampleBams = alignSampleReadsToReference(sampleFastqs.filter{it[0]=='SCD109'}, referenceFastaWithIndices)
+    sampleBams = alignSampleReadsToReference(sampleFastqs, referenceFastaWithIndices)
 
     markDuplicateReads(sampleBams)
 }
