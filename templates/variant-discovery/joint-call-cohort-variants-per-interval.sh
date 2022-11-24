@@ -1,8 +1,7 @@
 #!/bin/bash
 
-echo ${interval}
-echo ${intervalWorkspace}
-ls
-
-touch ${interval}_cohort-genotyped.vcf
-
+${params.gatk} --java-options "-Xmx4g" GenotypeGVCFs \
+    -R ${referenceFasta[1]} \
+    -V gendb://${intervalWorkspace} \
+    -O ${outputVCF} \
+    -L ${interval}

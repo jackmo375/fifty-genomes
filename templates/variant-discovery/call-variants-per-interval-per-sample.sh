@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "interval ${interval}"
-echo "sampleId ${sampleId}"
-echo "reference ${referenceFasta[1]}"
-echo "bam ${baiAndBam[1]}"
-
-touch "${interval}_${sampleId}.g.vcf.gz"
+${params.gatk} --java-options "-Xmx4g" HaplotypeCaller  \
+  -R ${referenceFasta[1]} \
+  -I ${baiAndBam[1]} \
+  -O ${outputGVCF} \
+  -ERC GVCF \
+  -L ${interval}
