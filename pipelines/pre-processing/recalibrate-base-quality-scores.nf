@@ -33,10 +33,4 @@ workflow() {
         sampleBams.join(sampleRecalibrationModels),
         referenceFasta,
         genomeIntervals)
-
-    calculatePostRecalibrationModel(
-        recalibratedSampleBams,
-        referenceFasta,
-        genomeIntervals,
-        variantDatabases)
 }

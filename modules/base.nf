@@ -45,6 +45,14 @@ def getMarkedDuplicateSampleBams(sampleInputFiles) {
     } // note that the bam index is listed before the bam itself! 
 }
 
+def getBaseRecalibratedSampleBams() {
+    return getSampleIdsAsChannel(params.sampleInputFiles).map {
+        [it,[
+            returnFile("${params.outputDataDir}/bases-recalibrated/${it}_bases-recalibrated.bai"),
+            returnFile("${params.outputDataDir}/bases-recalibrated/${it}_bases-recalibrated.bam")]]
+    } // note that the bam index is listed before the bam itself! 
+}
+
 def getGenomeIntervals() {
     return channel.value(file("${params.genomeIntervals}"))
 }

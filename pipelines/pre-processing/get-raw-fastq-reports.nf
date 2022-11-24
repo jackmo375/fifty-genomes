@@ -24,7 +24,6 @@ def getRawSampleFastqs(inputTsvPath) {
 }
 
 process getRawFastqFastqcReport {
-    debug true
     tag "${sampleId}"
     publishDir "${params.reportsDir}/fastqc", mode: 'copy'
 
@@ -39,7 +38,6 @@ process getRawFastqFastqcReport {
 }
 
 process getRawFastqJellyfishReport {
-    debug true
     tag "${sampleId}"
     publishDir "${params.reportsDir}/jellyfish", mode: 'copy'
 
@@ -54,15 +52,15 @@ process getRawFastqJellyfishReport {
 }
 
 process combineRawFastqReportsWithMultiQC {
-    debug true
     publishDir "${params.reportsDir}/multiqc", mode: 'copy'
 
     input:
     path reports
 
     output:
-    path "cohort-raw-fastq-multiqc.html"
+    path "${outputReport}"
 
     script:
-    template "${params.templatesDir}/pre-processing/combine-raw-fastq-reports.sh"
+    outputReport = "cohort-raw-fastq-multiqc.html"
+    template "${params.templatesDir}/pre-processing/combine-reports-with-multiqc.sh"
 }

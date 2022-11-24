@@ -1,0 +1,41 @@
+#!~/bin/nextflow
+
+nextflow.enable.dsl=2
+
+include {
+    getBaseRecalibratedSampleBams;
+    getReferenceFastaBundle;
+    getGenomeIntervals;
+} from "${params.modulesDir}/base.nf"
+
+workflow() {
+
+    sampleBams = getBaseRecalibratedSampleBams().filter{ it[0] == 'CP40' }.view()
+
+    referenceFasta = getReferenceFastaBundle()
+
+    genomeIntervals = getGenomeIntervals()
+
+    sampleGVCFs = callVariantsPerSample(sampleBams, referenceFasta, genomeIntervals)
+
+    sampleGVCFMap = getSampleGVCFMap(???)
+
+    genomicsDBWorkspace = consolidateSampleGVCFs(sampleGVCFs.collect(), sampleGVCFMap, genomeIntervals)
+
+    jointCallCohortVariants(genomicsDBWorkspace, referenceFasta, genomeIntervals)
+}
+
+process callVariantsPerSample {
+    debug true
+    tag "${sampleId}"
+
+    input:
+    tuple val(sampleId), path(baiAndBam)
+    path referenceFasta
+
+    output:
+    path "${sampleId}_raw-calls.g.vcf.gz"
+
+    script:
+    template "${params.templatesDir}/variant-discovery/call-variants-per-sample.sh"
+}
