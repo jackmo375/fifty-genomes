@@ -20,7 +20,9 @@ workflow() {
 
     sampleBams = getBaseRecalibratedSampleBams().filter{ it[0] == 'CP40' || it[0] == 'SCD351' }
 
-    genomeIntervals = getGenomeIntervals().filter{ it == 'chr9:61785369-62149738' || it == 'chr16:33264596-33392411' }
+    genomeIntervals = getGenomeIntervals()
+
+    //genomeIntervals = getGenomeIntervals().filter{ it == 'chr9:61785369-62149738' || it == 'chr16:33264596-33392411' }
 
     referenceFasta = getReferenceFastaBundle()
 
