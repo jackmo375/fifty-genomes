@@ -8,3 +8,4 @@ pipelines and scripts for processing the 50 genomes data for sadacc
 * *all* processes should use templates, i.e. follow the rule: 1 process = 1 template
 * make all design decisions consistent across the repo
 * simple descriptions of the workflow for humans to follow, inc dataflow diagrams
+* CHPC has severe limitations on the number of jobs that can be running simultaneously for a given user. Therefore each script needs to adjusted to run in 'local' mode on a compute cluster
